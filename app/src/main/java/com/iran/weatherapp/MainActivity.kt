@@ -1,6 +1,6 @@
 package com.iran.weatherapp
 
-os.Bundle
+import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.iran.weatherapp.databinding.ActivityMainBinding
@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
             binding.tvRainfall.text = "میزان بارندگی: 0.0 میلی‌متر"
             
             // تغییر هوشمند آیکون بر اساس وضعیت آب و هوا
-            binding.ivWeatherIcon.setImageResource(android.R.drawable.ic_menu_sun)
+            binding.ivWeatherIcon.setImageResource(android.R.drawable.ic_menu_compass)
         } else {
-            Toast.makeText(this, "شهر مورد نظر در محدوده ایران یافت نشد", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "شهر مورد نظر در محدوده ایران یافت نشد", Toast.LogicalLength.SHORT).show()
         }
     }
 }
