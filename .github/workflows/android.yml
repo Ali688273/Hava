@@ -17,16 +17,18 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Generate Keystore Automatically
+      run: |
+        keytool -genkey -v -keystore app/upload-keystore.jks \
+        -alias weatherkey -keyalg RSA -keysize 2048 -validity 10000 \
+        -storepass android123456 -keypass android123456 \
+        -dname "CN=Weather App, OU=Development, O=Android, L=Tehran, C=IR"
+
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Build Signed Release APK
-      run: |
-        gradle assembleRelease \
-        -Pandroid.injected.signing.store.file=upload-keystore.jks \
-        -Pandroid.injected.signing.store.password=android123456 \
-        -Pandroid.injected.signing.key.alias=weatherkey \
-        -Pandroid.injected.signing.key.password=android123456
+    - name: Build Release APK
+      run: gradle assembleRelease
 
     - name: Upload Signed APK
       uses: actions/upload-artifact@v4
