@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             // تغییر هوشمند آیکون بر اساس وضعیت آب و هوا
             binding.ivWeatherIcon.setImageResource(android.R.drawable.ic_menu_compass)
         } else {
-            Toast.makeText(this, "شهر مورد نظر در محدوده ایران یافت نشد", Toast.LogicalLength.SHORT).show()
+            Toast.makeText(this, "شهر مورد نظر در محدوده ایران یافت نشد", Toast.LENGTH_SHORT).show()
         }
     }
 }
