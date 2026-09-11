@@ -3,6 +3,7 @@ package com.iran.weatherapp
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // پیش‌فرض روی تهران
         fetchLocationAndWeather("تهران")
 
         binding.btnSearch.setOnClickListener {
@@ -45,6 +46,38 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnGps.setOnClickListener {
             getCurrentLocationWeather()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+    }
+
+    private fun playRainSound(isRainy: Boolean) {
+        try {
+            if (isRainy) {
+                if (mediaPlayer == null) {
+                    // حتماً فایل صوتی rain_sound.mp3 را باید در مسیر res/raw قرار دهید
+                    val resId = resources.getIdentifier("rain_sound", "raw", packageName)
+                    if (resId != 0) {
+                        mediaPlayer = MediaPlayer.create(this, resId).apply {
+                            isLooping = true
+                            start()
+                        }
+                    }
+                } else if (!mediaPlayer!!.isPlaying) {
+                    mediaPlayer?.start()
+                }
+            } else {
+                mediaPlayer?.let {
+                    if (it.isPlaying) {
+                        it.pause()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // در صورت نبودن فایل صوتی در پوشه raw برنامه کرش نکند
         }
     }
 
@@ -123,6 +156,7 @@ class MainActivity : AppCompatActivity() {
                 val next1Hours = firstHour.getJSONObject("data").optJSONObject("next_1_hours")
                 val precipitation = next1Hours?.optJSONObject("details")?.optDouble("precipitation_amount", 0.0) ?: 0.0
 
+                // پیش‌بینی ساعتی
                 val hourDataList = mutableListOf<Triple<String, Int, Double>>()
                 for (i in 1..3) {
                     if (i < timeseries.length()) {
@@ -144,6 +178,16 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                // پیش‌بینی روزهای آینده (نمونه دوره‌ای از داده‌ها)
+                val dailyTemps = mutableListOf<Int>()
+                for (i in 6..24 step 6) {
+                    if (i < timeseries.length()) {
+                        val dItem = timeseries.getJSONObject(i)
+                        val dTemp = dItem.getJSONObject("data").getJSONObject("instant").getJSONObject("details").getDouble("air_temperature").toInt()
+                        dailyTemps.add(dTemp)
+                    }
+                }
+
                 withContext(Dispatchers.Main) {
                     binding.tvCityName.text = cityName
                     binding.tvTemp.text = "${temp.toInt()}°C"
@@ -152,7 +196,8 @@ class MainActivity : AppCompatActivity() {
                     binding.tvPressure.text = "فشار: ${pressure.toInt()} hPa"
                     binding.tvRainfall.text = "میزان بارندگی: $precipitation میلی‌متر"
 
-                    if (precipitation > 0.0) {
+                    val isRainy = precipitation > 0.0
+                    if (isRainy) {
                         binding.tvCondition.text = "بارانی"
                         binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_compass)
                     } else {
@@ -160,9 +205,13 @@ class MainActivity : AppCompatActivity() {
                         binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_day)
                     }
 
+                    // پخش صدای باران اگر هوا بارانی باشد
+                    playRainSound(isRainy)
+
+                    // به‌روزرسانی کارت‌های ساعتی
                     binding.tvHourlyTemp1.text = "${temp.toInt()}°"
                     binding.tvHourlyTime1.text = "اکنون"
-                    binding.ivHourlyIcon1.setImageResource(if (precipitation > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+                    binding.ivHourlyIcon1.setImageResource(if (isRainy) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
 
                     if (hourDataList.size >= 3) {
                         binding.tvHourlyTemp2.text = "${hourDataList[0].second}°"
@@ -176,6 +225,13 @@ class MainActivity : AppCompatActivity() {
                         binding.tvHourlyTemp4.text = "${hourDataList[2].second}°"
                         binding.tvHourlyTime4.text = hourDataList[2].first
                         binding.ivHourlyIcon4.setImageResource(if (hourDataList[2].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+                    }
+
+                    // به‌روزرسانی پیش‌بینی روزانه
+                    if (dailyTemps.size >= 3) {
+                        binding.tvDay1.text = "فردا: ${dailyTemps[0]}°"
+                        binding.tvDay2.text = "پس‌فردا: ${dailyTemps[1]}°"
+                        binding.tvDay3.text = "روز سوم: ${dailyTemps[2]}°"
                     }
 
                     updateBackgroundBasedOnTime()
