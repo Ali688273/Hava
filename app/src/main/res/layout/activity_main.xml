@@ -72,7 +72,7 @@
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
                 <TextView android:id="@+id/tvHourlyTime1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="اکنون" android:textColor="#B0BEC5" android:textSize="12sp"/>
-                <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
+                <ImageView android:id="@+id/ivHourlyIcon1" android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
                 <TextView android:id="@+id/tvHourlyTemp1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
 
@@ -85,8 +85,8 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:id="@+id/tvHourlyTime2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+1 ساعت" android:textColor="#B0BEC5" android:textSize="12sp"/>
-                <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
+                <TextView android:id="@+id/tvHourlyTime2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+1" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <ImageView android:id="@+id/ivHourlyIcon2" android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
                 <TextView android:id="@+id/tvHourlyTemp2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
 
@@ -99,8 +99,8 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:id="@+id/tvHourlyTime3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+2 ساعت" android:textColor="#B0BEC5" android:textSize="12sp"/>
-                <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
+                <TextView android:id="@+id/tvHourlyTime3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+2" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <ImageView android:id="@+id/ivHourlyIcon3" android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
                 <TextView android:id="@+id/tvHourlyTemp3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
 
@@ -113,8 +113,8 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:id="@+id/tvHourlyTime4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+3 ساعت" android:textColor="#B0BEC5" android:textSize="12sp"/>
-                <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_month" android:layout_marginVertical="4dp"/>
+                <TextView android:id="@+id/tvHourlyTime4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+3" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <ImageView android:id="@+id/ivHourlyIcon4" android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
                 <TextView android:id="@+id/tvHourlyTemp4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
         </LinearLayout>
@@ -154,11 +154,21 @@
                 android:textColor="#B0BEC5"
                 android:textSize="16sp" />
 
+            <!-- آیکون وضعیت جوی اصلی در کارت دما -->
+            <ImageView
+                android:id="@+id/ivMainConditionIcon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:src="@android:drawable/ic_menu_day" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/ivMainConditionIcon"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="8dp"
                 android:gravity="end"
                 android:orientation="vertical">
 
@@ -211,16 +221,7 @@
                 android:id="@+id/tvRainfall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="میزان بارندگی ۲۴ ساعت گذشته: 0.0 میلی‌متر"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvUVIndex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="شاخص فرابنفش (UV): 3 (متوسط)"
+                android:text="میزان بارندگی: 0.0 میلی‌متر"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:layout_marginBottom="6dp"/>
@@ -230,7 +231,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="پیش‌بینی از MET Norway (جهانی)"
+                android:text="پیش‌بینی از MET Norway"
                 android:textColor="#8D99AE"
                 android:textSize="11sp" />
         </LinearLayout>
