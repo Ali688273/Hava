@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // پیش‌فرض هنگام باز شدن برنامه
         fetchLocationAndWeather("تهران")
 
         binding.btnSearch.setOnClickListener {
@@ -59,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         try {
             if (isRainy) {
                 if (mediaPlayer == null) {
-                    // نکته: برای پخش صدا، باید یک فایل صوتی به نام rain_sound.mp3 در پوشه res/raw پروژه قرار دهید
                     val resId = resources.getIdentifier("rain_sound", "raw", packageName)
                     if (resId != 0) {
                         mediaPlayer = MediaPlayer.create(this, resId).apply {
@@ -78,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            // جلوگیری از کرش در صورت نبودن فایل صوتی
+            // جلوگیری از خطا در صورت نبود فایل صوتی
         }
     }
 
@@ -157,7 +155,6 @@ class MainActivity : AppCompatActivity() {
                 val next1Hours = firstHour.getJSONObject("data").optJSONObject("next_1_hours")
                 val precipitation = next1Hours?.optJSONObject("details")?.optDouble("precipitation_amount", 0.0) ?: 0.0
 
-                // پیش‌بینی ساعتی
                 val hourDataList = mutableListOf<Triple<String, Int, Double>>()
                 for (i in 1..3) {
                     if (i < timeseries.length()) {
@@ -179,7 +176,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                // پیش‌بینی روزهای آینده
                 val dailyTemps = mutableListOf<Int>()
                 for (i in 6..24 step 6) {
                     if (i < timeseries.length()) {
@@ -200,35 +196,32 @@ class MainActivity : AppCompatActivity() {
                     val isRainy = precipitation > 0.0
                     if (isRainy) {
                         binding.tvCondition.text = "بارانی"
-                        binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_compass)
+                        binding.ivMainConditionIcon.setImageResource(android.R.drawable.ic_menu_compass)
                     } else {
                         binding.tvCondition.text = "آسمان صاف و پایدار"
-                        binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_day)
+                        binding.ivMainConditionIcon.setImageResource(android.R.drawable.ic_menu_day)
                     }
 
-                    // پخش یا توقف صدای باران
                     playRainSound(isRainy)
 
-                    // به‌روزرسانی کارت‌های ساعتی
                     binding.tvHourlyTemp1.text = "${temp.toInt()}°"
                     binding.tvHourlyTime1.text = "اکنون"
-                    binding.ivHourlyIcon1.setImageResource(if (isRainy) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+                    binding.ivHourlyIcon1.setImageResource(if (isRainy) android.R.drawable.ic_menu_compass else android.R.drawable.ic_menu_day)
 
                     if (hourDataList.size >= 3) {
                         binding.tvHourlyTemp2.text = "${hourDataList[0].second}°"
                         binding.tvHourlyTime2.text = hourDataList[0].first
-                        binding.ivHourlyIcon2.setImageResource(if (hourDataList[0].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+                        binding.ivHourlyIcon2.setImageResource(if (hourDataList[0].third > 0.0) android.R.drawable.ic_menu_compass else android.R.drawable.ic_menu_day)
 
                         binding.tvHourlyTemp3.text = "${hourDataList[1].second}°"
                         binding.tvHourlyTime3.text = hourDataList[1].first
-                        binding.ivHourlyIcon3.setImageResource(if (hourDataList[1].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+                        binding.ivHourlyIcon3.setImageResource(if (hourDataList[1].third > 0.0) android.R.drawable.ic_menu_compass else android.R.drawable.ic_menu_day)
 
-                        binding.tvHourlyTemp4.text = "${hourDataList.last().second}°"
-                        binding.tvHourlyTime4.text = hourDataList.last().first
-                        binding.ivHourlyIcon4.setImageResource(if (hourDataList.last().third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+                        binding.tvHourlyTemp4.text = "${hourDataList[2].second}°"
+                        binding.tvHourlyTime4.text = hourDataList[2].first
+                        binding.ivHourlyIcon4.setImageResource(if (hourDataList[2].third > 0.0) android.R.drawable.ic_menu_compass else android.R.drawable.ic_menu_day)
                     }
 
-                    // به‌روزرسانی پیش‌بینی روزانه
                     if (dailyTemps.size >= 3) {
                         binding.tvDay1.text = "فردا: ${dailyTemps[0]}°"
                         binding.tvDay2.text = "پس‌فردا: ${dailyTemps[1]}°"
