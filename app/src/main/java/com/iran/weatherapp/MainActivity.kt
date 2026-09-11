@@ -1,8 +1,14 @@
 package com.iran.weatherapp
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.iran.weatherapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 import org.json.JSONArray
@@ -16,12 +22,16 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // پیش‌فرض روی تهران
         fetchLocationAndWeather("تهران")
 
         binding.btnSearch.setOnClickListener {
@@ -30,6 +40,33 @@ class MainActivity : AppCompatActivity() {
                 fetchLocationAndWeather(query)
             } else {
                 Toast.makeText(this, "لطفاً نام شهر را وارد کنید", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.btnGps.setOnClickListener {
+            getCurrentLocationWeather()
+        }
+    }
+
+    private fun getCurrentLocationWeather() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                100
+            )
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                fetchWeatherData(location.latitude, location.longitude, "موقعیت فعلی شما")
+            } else {
+                Toast.makeText(this, "امکان دریافت موقعیت وجود ندارد. GPS را روشن کنید", Toast.LENGTH_SHORT).show()
             }
         }
     }
