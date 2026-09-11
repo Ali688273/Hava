@@ -10,6 +10,8 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     private fun fetchLocationAndWeather(cityName: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // جستجوی آنلاین مختصات هر شهر از طریق سرویس جهانی Nominatim
                 val encodedCity = URLEncoder.encode(cityName, "UTF-8")
                 val geoUrl = "https://nominatim.openstreetmap.org/search?q=$encodedCity&format=json&limit=1"
                 val geoConn = URL(geoUrl).openConnection() as HttpURLConnection
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                 val json = JSONObject(response)
                 val timeseries = json.getJSONObject("properties").getJSONArray("timeseries")
                 
+                // ساعت اول (اکنون)
                 val firstHour = timeseries.getJSONObject(0)
                 val instantDetails = firstHour.getJSONObject("data").getJSONObject("instant").getJSONObject("details")
                 val temp = instantDetails.getDouble("air_temperature")
@@ -86,6 +88,25 @@ class MainActivity : AppCompatActivity() {
                 val next1Hours = firstHour.getJSONObject("data").optJSONObject("next_1_hours")
                 val precipitation = next1Hours?.optJSONObject("details")?.optDouble("precipitation_amount", 0.0) ?: 0.0
 
+                // اطلاعات ساعات آینده برای اسکرول افقی
+                val hourDataList = mutableListOf<Pair<String, Int>>()
+                for (i in 1..3) {
+                    if (i < timeseries.length()) {
+                        val item = timeseries.getJSONObject(i)
+                        val timeStr = item.getString("time")
+                        val tDetails = item.getJSONObject("data").getJSONObject("instant").getJSONObject("details")
+                        val tTemp = tDetails.getDouble("air_temperature").toInt()
+                        
+                        val shortTime = try {
+                            val parsedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(timeStr)
+                            SimpleDateFormat("HH:mm", Locale.US).format(parsedDate!!)
+                        } catch (e: Exception) {
+                            "+$i ساعت"
+                        }
+                        hourDataList.add(Pair(shortTime, tTemp))
+                    }
+                }
+
                 withContext(Dispatchers.Main) {
                     binding.tvCityName.text = cityName
                     binding.tvTemp.text = "${temp.toInt()}°C"
@@ -94,6 +115,21 @@ class MainActivity : AppCompatActivity() {
                     binding.tvPressure.text = "فشار: ${pressure.toInt()} hPa"
                     binding.tvRainfall.text = "میزان بارندگی: $precipitation میلی‌متر"
                     binding.tvCondition.text = if (precipitation > 0.0) "بارانی" else "آسمان صاف و پایدار"
+
+                    // به‌روزرسانی کارت‌های ساعتی افقی و زمان‌ها
+                    if (hourDataList.size >= 3) {
+                        binding.tvHourlyTemp1.text = "${temp.toInt()}°"
+                        binding.tvHourlyTime1.text = "اکنون"
+
+                        binding.tvHourlyTemp2.text = "${hourDataList[0].second}°"
+                        binding.tvHourlyTime2.text = hourDataList[0].first
+
+                        binding.tvHourlyTemp3.text = "${hourDataList[1].second}°"
+                        binding.tvHourlyTime3.text = hourDataList[1].first
+
+                        binding.tvHourlyTemp4.text = "${hourDataList[2].second}°"
+                        binding.tvHourlyTime4.text = hourDataList[2].first
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
