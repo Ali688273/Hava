@@ -88,8 +88,8 @@ class MainActivity : AppCompatActivity() {
                 val next1Hours = firstHour.getJSONObject("data").optJSONObject("next_1_hours")
                 val precipitation = next1Hours?.optJSONObject("details")?.optDouble("precipitation_amount", 0.0) ?: 0.0
 
-                // اطلاعات ساعات آینده برای اسکرول افقی
-                val hourDataList = mutableListOf<Pair<String, Int>>()
+                // اطلاعات ساعات آینده برای اسکرول افقی (دما، زمان و میزان بارش هر ساعت)
+                val hourDataList = mutableListOf<Triple<String, Int, Double>>()
                 for (i in 1..3) {
                     if (i < timeseries.length()) {
                         val item = timeseries.getJSONObject(i)
@@ -97,38 +97,53 @@ class MainActivity : AppCompatActivity() {
                         val tDetails = item.getJSONObject("data").getJSONObject("instant").getJSONObject("details")
                         val tTemp = tDetails.getDouble("air_temperature").toInt()
                         
+                        val tNext1 = item.getJSONObject("data").optJSONObject("next_1_hours")
+                        val tRain = tNext1?.optJSONObject("details")?.optDouble("precipitation_amount", 0.0) ?: 0.0
+
                         val shortTime = try {
                             val parsedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(timeStr)
                             SimpleDateFormat("HH:mm", Locale.US).format(parsedDate!!)
                         } catch (e: Exception) {
                             "+$i ساعت"
                         }
-                        hourDataList.add(Pair(shortTime, tTemp))
+                        hourDataList.add(Triple(shortTime, tTemp, tRain))
                     }
                 }
 
-                withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.Main) {
                     binding.tvCityName.text = cityName
                     binding.tvTemp.text = "${temp.toInt()}°C"
                     binding.tvHumidity.text = "رطوبت: ${humidity.toInt()}%"
                     binding.tvWindSpeed.text = "باد: ${windSpeed.toInt()} km/h"
                     binding.tvPressure.text = "فشار: ${pressure.toInt()} hPa"
                     binding.tvRainfall.text = "میزان بارندگی: $precipitation میلی‌متر"
-                    binding.tvCondition.text = if (precipitation > 0.0) "بارانی" else "آسمان صاف و پایدار"
 
-                    // به‌روزرسانی کارت‌های ساعتی افقی و زمان‌ها
+                    // تعیین وضعیت و آیکون اصلی
+                    if (precipitation > 0.0) {
+                        binding.tvCondition.text = "بارانی"
+                        binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_compass)
+                    } else {
+                        binding.tvCondition.text = "آسمان صاف و پایدار"
+                        binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_day)
+                    }
+
+                    // به‌روزرسانی کارت‌های ساعتی افقی همراه با آیکون‌های مجزا
+                    binding.tvHourlyTemp1.text = "${temp.toInt()}°"
+                    binding.tvHourlyTime1.text = "اکنون"
+                    binding.ivHourlyIcon1.setImageResource(if (precipitation > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
+
                     if (hourDataList.size >= 3) {
-                        binding.tvHourlyTemp1.text = "${temp.toInt()}°"
-                        binding.tvHourlyTime1.text = "اکنون"
-
                         binding.tvHourlyTemp2.text = "${hourDataList[0].second}°"
                         binding.tvHourlyTime2.text = hourDataList[0].first
+                        binding.ivHourlyIcon2.setImageResource(if (hourDataList[0].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
 
                         binding.tvHourlyTemp3.text = "${hourDataList[1].second}°"
                         binding.tvHourlyTime3.text = hourDataList[1].first
+                        binding.ivHourlyIcon3.setImageResource(if (hourDataList[1].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
 
                         binding.tvHourlyTemp4.text = "${hourDataList[2].second}°"
                         binding.tvHourlyTime4.text = hourDataList[2].first
+                        binding.ivHourlyIcon4.setImageResource(if (hourDataList[2].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
                     }
                 }
             } catch (e: Exception) {
