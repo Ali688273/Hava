@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // پیش‌فرض روی تهران
         fetchLocationAndWeather("تهران")
 
         binding.btnSearch.setOnClickListener {
@@ -77,7 +76,6 @@ class MainActivity : AppCompatActivity() {
                 val json = JSONObject(response)
                 val timeseries = json.getJSONObject("properties").getJSONArray("timeseries")
                 
-                // ساعت اول (اکنون)
                 val firstHour = timeseries.getJSONObject(0)
                 val instantDetails = firstHour.getJSONObject("data").getJSONObject("instant").getJSONObject("details")
                 val temp = instantDetails.getDouble("air_temperature")
@@ -88,7 +86,6 @@ class MainActivity : AppCompatActivity() {
                 val next1Hours = firstHour.getJSONObject("data").optJSONObject("next_1_hours")
                 val precipitation = next1Hours?.optJSONObject("details")?.optDouble("precipitation_amount", 0.0) ?: 0.0
 
-                // اطلاعات ساعات آینده برای اسکرول افقی (دما، زمان و میزان بارش هر ساعت)
                 val hourDataList = mutableListOf<Triple<String, Int, Double>>()
                 for (i in 1..3) {
                     if (i < timeseries.length()) {
@@ -110,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                    withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     binding.tvCityName.text = cityName
                     binding.tvTemp.text = "${temp.toInt()}°C"
                     binding.tvHumidity.text = "رطوبت: ${humidity.toInt()}%"
@@ -118,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                     binding.tvPressure.text = "فشار: ${pressure.toInt()} hPa"
                     binding.tvRainfall.text = "میزان بارندگی: $precipitation میلی‌متر"
 
-                    // تعیین وضعیت و آیکون اصلی
                     if (precipitation > 0.0) {
                         binding.tvCondition.text = "بارانی"
                         binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_compass)
@@ -127,7 +123,6 @@ class MainActivity : AppCompatActivity() {
                         binding.ivMainConditionIcon.setImageResource(android:drawable.ic_menu_day)
                     }
 
-                    // به‌روزرسانی کارت‌های ساعتی افقی همراه با آیکون‌های مجزا
                     binding.tvHourlyTemp1.text = "${temp.toInt()}°"
                     binding.tvHourlyTime1.text = "اکنون"
                     binding.ivHourlyIcon1.setImageResource(if (precipitation > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
@@ -145,12 +140,24 @@ class MainActivity : AppCompatActivity() {
                         binding.tvHourlyTime4.text = hourDataList[2].first
                         binding.ivHourlyIcon4.setImageResource(if (hourDataList[2].third > 0.0) android:drawable.ic_menu_compass else android:drawable.ic_menu_day)
                     }
+
+                    updateBackgroundBasedOnTime()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "خطا در دریافت اطلاعات هواشناسی", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun updateBackgroundBasedOnTime() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        if (hour in 6..18) {
+            binding.rootLayout.setBackgroundColor(android.graphics.Color.parseColor("#1B263B"))
+        } else {
+            binding.rootLayout.setBackgroundColor(android.graphics.Color.parseColor("#0D1B2A"))
         }
     }
 }
