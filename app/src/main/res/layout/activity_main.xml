@@ -48,7 +48,7 @@
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <!-- پیش‌بینی ساعتی افقی -->
+    <!-- پیش‌بینی ساعتی افقی زنده -->
     <HorizontalScrollView
         android:id="@+id/hourlyScroll"
         android:layout_width="match_parent"
@@ -71,9 +71,9 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="اکنون" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <TextView android:id="@+id/tvHourlyTime1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="اکنون" android:textColor="#B0BEC5" android:textSize="12sp"/>
                 <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
-                <TextView android:id="@+id/tvHourlyTemp1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="23°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
+                <TextView android:id="@+id/tvHourlyTemp1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
 
             <!-- کارت ساعت دوم -->
@@ -85,9 +85,9 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="15:00" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <TextView android:id="@+id/tvHourlyTime2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+1 ساعت" android:textColor="#B0BEC5" android:textSize="12sp"/>
                 <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="27°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
+                <TextView android:id="@+id/tvHourlyTemp2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
 
             <!-- کارت ساعت سوم -->
@@ -99,9 +99,9 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="18:00" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <TextView android:id="@+id/tvHourlyTime3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+2 ساعت" android:textColor="#B0BEC5" android:textSize="12sp"/>
                 <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_day" android:layout_marginVertical="4dp"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="25°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
+                <TextView android:id="@+id/tvHourlyTemp3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
 
             <!-- کارت ساعت چهارم -->
@@ -113,9 +113,9 @@
                 android:gravity="center"
                 android:layout_marginEnd="8dp"
                 android:padding="8dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="21:00" android:textColor="#B0BEC5" android:textSize="12sp"/>
+                <TextView android:id="@+id/tvHourlyTime4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+3 ساعت" android:textColor="#B0BEC5" android:textSize="12sp"/>
                 <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_month" android:layout_marginVertical="4dp"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="20°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
+                <TextView android:id="@+id/tvHourlyTemp4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--°" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
         </LinearLayout>
     </HorizontalScrollView>
