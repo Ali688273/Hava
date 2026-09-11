@@ -7,13 +7,14 @@
     android:background="#0A1128"
     android:padding="16dp">
 
-    <!-- نوار جستجو و عنوان شهر -->
+    <!-- نوار جستجو، دکمه جستجو و دکمه GPS -->
     <LinearLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical">
 
         <EditText
             android:id="@+id/etSearchCity"
@@ -21,7 +22,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="#1C2541"
-            android:hint="نام شهر (مثلاً تهران، مشهد، شیراز...)"
+            android:hint="نام شهر (تهران، مشهد...)"
             android:textColor="#FFFFFF"
             android:textColorHint="#8D99AE"
             android:paddingHorizontal="12dp"
@@ -35,6 +36,16 @@
             android:backgroundTint="#3A506B"
             android:text="جستجو"
             android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnGps"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#1C2541"
+            android:text="📍"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
