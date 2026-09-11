@@ -212,7 +212,7 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- کارت جزئیات پیشرفته و بارش -->
+    <!-- کارت پیش‌بینی چندروزه و جزئیات بارش -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -229,19 +229,62 @@
             android:padding="16dp">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="پیش‌بینی روزهای آینده"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/tvDay1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="فردا: --°"
+                    android:textColor="#B0BEC5"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvDay2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="پس‌فردا: --°"
+                    android:textColor="#B0BEC5"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvDay3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="روز سوم: --°"
+                    android:textColor="#B0BEC5"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/tvRainfall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="میزان بارندگی: 0.0 میلی‌متر"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
-                android:layout_marginBottom="6dp"/>
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:id="@+id/tvDataSource"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:text="پیش‌بینی از MET Norway"
                 android:textColor="#8D99AE"
                 android:textSize="11sp" />
