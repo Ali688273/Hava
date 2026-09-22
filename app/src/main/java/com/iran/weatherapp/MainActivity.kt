@@ -11,6 +11,8 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.iran.weatherapp.databinding.ActivityMainBinding
+import com.iran.weatherapp.core.WeatherConditionMapper
+import com.iran.weatherapp.core.WeatherCondition
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -193,8 +195,12 @@ class MainActivity : AppCompatActivity() {
                     binding.tvPressure.text = "فشار: ${pressure.toInt()} hPa"
                     binding.tvRainfall.text = "میزان بارندگی: $precipitation میلی‌متر"
 
-                    val isRainy = precipitation > 0.0
-                    if (isRainy) {
+                    val condition = WeatherConditionMapper.fromPrecipitation(precipitation)
+                    val isRainy = condition == WeatherCondition.RAIN || condition == WeatherCondition.STORM
+                    if (condition == WeatherCondition.STORM) {
+                        binding.tvCondition.text = "طوفانی"
+                        binding.ivMainConditionIcon.setImageResource(android.R.drawable.ic_menu_compass)
+                    } else if (isRainy) {
                         binding.tvCondition.text = "بارانی"
                         binding.ivMainConditionIcon.setImageResource(android.R.drawable.ic_menu_compass)
                     } else {
